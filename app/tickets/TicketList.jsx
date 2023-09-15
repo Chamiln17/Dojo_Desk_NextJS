@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import React from 'react'
 
 async function getTickets() {
   const response = await fetch('http://localhost:4000/tickets' , {
     next : {
-      revalidate : 10
+      revalidate : 0 // never gets data from cache
     }
   } )
   const json = await response.json()
@@ -16,9 +17,11 @@ export default async function TicketList() {
     <>
     {tickets.map((ticket) => (
       <div key={ticket.id} className='card my-5'>
-        <h5>{ticket.title}</h5>
-        <p>{ticket.body.slice(0,200)}...</p>
-        <div className={`pill ${ticket.priority}`}>{ticket.priority}</div>
+        <Link href={`/tickets/${ticket.id}`}>
+          <h5>{ticket.title}</h5>
+          <p>{ticket.body.slice(0,200)}...</p>
+          <div className={`pill ${ticket.priority}`}>{ticket.priority}</div>
+        </Link>
       </div>
     ))}
     </>
