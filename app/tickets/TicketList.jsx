@@ -1,7 +1,11 @@
 import React from 'react'
 
 async function getTickets() {
-  const response = await fetch('http://localhost:4000/tickets')
+  const response = await fetch('http://localhost:4000/tickets' , {
+    next : {
+      revalidate : 10
+    }
+  } )
   const json = await response.json()
   return json
 }
