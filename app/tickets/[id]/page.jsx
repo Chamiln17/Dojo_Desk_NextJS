@@ -1,13 +1,20 @@
+import { notFound } from 'next/navigation'
 import React from 'react'
+
+
+export async function generateStaticParams() {
+    const tickets = await fetch('http://localhost:4000/tickets').then(res => res.json())
+    return tickets.map(ticket => ({id: ticket.id}))
+}
 
 async function getTickets(id) {
     const response = await fetch('http://localhost:4000/tickets/'+ id , {
       next : {
-        revalidate : 0 // never gets data from cache
+        revalidate : 60 // never gets data from cache
       }
     } )
-    const json = await response.json()
-    return json
+    if(!response.ok) {notFound()}
+    return await response.json()
   }
 
 export default async function TicketDetails({params}) {
